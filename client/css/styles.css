@@ -15,10 +15,8 @@ body {
 .game {
 	width:100%;
 	height:65%;
-  background-image: url('../img/Background.jpg');
+  background: url('../img/Background-extend.jpg') no-repeat center 80%;
   background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
   padding:0;
   margin:0;
 }
@@ -45,7 +43,7 @@ body {
   width:60px;
   position:absolute;
   margin-left:10px;
-  margin-top:10px; 
+  margin-top:10px;
 }
 
 .glass {
@@ -56,7 +54,7 @@ body {
   width:60px;
   position:absolute;
   margin-left:10px;
-  margin-top:10px; 
+  margin-top:10px;
 }
 
 
