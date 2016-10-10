@@ -56,7 +56,7 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _Container = __webpack_require__(173);
+	var _Container = __webpack_require__(172);
 
 	var _Container2 = _interopRequireDefault(_Container);
 
@@ -80,7 +80,13 @@
 	  function App(props) {
 	    _classCallCheck(this, App);
 
-	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+
+	    _this.state = {
+	      availableIncomes: [{ name: 'upgrade1', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png' }],
+	      availableMonsters: [{ name: 'butterfly', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png' }]
+	    };
+	    return _this;
 	  }
 
 	  _createClass(App, [{
@@ -89,7 +95,9 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'app' },
-	        _react2.default.createElement('div', { className: 'container' })
+	        _react2.default.createElement(_Container2.default, { buttons: this.state.availableIncomes }),
+	        _react2.default.createElement(MainInfo, null),
+	        _react2.default.createElement(_Container2.default, { buttons: this.state.availableMonsters })
 	      );
 	    }
 	  }]);
@@ -21502,8 +21510,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 172 */,
-/* 173 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21518,7 +21525,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Button = __webpack_require__(174);
+	var _Button = __webpack_require__(173);
 
 	var _Button2 = _interopRequireDefault(_Button);
 
@@ -21545,7 +21552,14 @@
 				return _react2.default.createElement(
 					'div',
 					{ className: 'container' },
-					_react2.default.createElement(_Button2.default, null)
+					_react2.default.createElement(
+						'div',
+						{ className: 'title' },
+						'THIS SIDE'
+					),
+					this.props.buttons.map(function (button) {
+						return _react2.default.createElement(_Button2.default, { details: button });
+					})
 				);
 			}
 		}]);
@@ -21556,7 +21570,7 @@
 	exports.default = Container;
 
 /***/ },
-/* 174 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21592,26 +21606,14 @@
 			key: 'render',
 			value: function render() {
 				return _react2.default.createElement(
-					'svg',
-					{ height: '80', width: '40', className: 'DNA' },
-					_react2.default.createElement('line', { className: 'dna1', x1: '0', y1: '0', y2: '0', x2: '40',
-						strokeWidth: '2', stroke: 'black' }),
-					_react2.default.createElement('line', { className: 'dna2', x1: '0', y1: '10', y2: '10', x2: '40',
-						strokeWidth: '2', stroke: 'black' }),
-					_react2.default.createElement('line', { className: 'dna3', x1: '0', y1: '20', y2: '20', x2: '40',
-						strokeWidth: '2', stroke: 'black' }),
-					_react2.default.createElement('line', { className: 'dna4', x1: '0', y1: '30', y2: '30', x2: '40',
-						strokeWidth: '2', stroke: 'black' }),
-					_react2.default.createElement('line', { className: 'dna5', x1: '0', y1: '40', y2: '40', x2: '40',
-						strokeWidth: '2', stroke: 'black' }),
-					_react2.default.createElement('line', { className: 'dna6', x1: '0', y1: '50', y2: '50', x2: '40',
-						strokeWidth: '2', stroke: 'black' }),
-					_react2.default.createElement('line', { className: 'dna7', x1: '0', y1: '60', y2: '60', x2: '40',
-						strokeWidth: '2', stroke: 'black' }),
-					_react2.default.createElement('line', { className: 'dna8', x1: '0', y1: '70', y2: '70', x2: '40',
-						strokeWidth: '2', stroke: 'black' }),
-					_react2.default.createElement('line', { className: 'dna9', x1: '0', y1: '80', y2: '80', x2: '40',
-						strokeWidth: '2', stroke: 'black' })
+					'div',
+					{ className: 'monster' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'outline' },
+						_react2.default.createElement('image', { src: this.props.details.image, className: 'inner' }),
+						_react2.default.createElement('div', { className: 'glass' })
+					)
 				);
 			}
 		}]);
