@@ -60,6 +60,10 @@
 
 	var _Container2 = _interopRequireDefault(_Container);
 
+	var _MainInfo = __webpack_require__(174);
+
+	var _MainInfo2 = _interopRequireDefault(_MainInfo);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -83,21 +87,71 @@
 	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
 	    _this.state = {
-	      availableIncomes: [{ name: 'upgrade1', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png' }],
-	      availableMonsters: [{ name: 'butterfly', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png' }]
+	      availableIncomes: [{ name: 'upgrade1', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png',
+	        cps: .3, cost: 15, costUp: .3 }, { name: 'upgrade2', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png',
+	        cps: 3, cost: 55, costUp: .3 }, { name: 'upgrade3', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png',
+	        cps: 15, cost: 150, costUp: .3 }, { name: 'upgrade4', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png',
+	        cps: 35, cost: 600, costUp: .3 }, { name: 'upgrade5', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png',
+	        cps: 75, cost: 1700, costUp: .3 }],
+	      availableMonsters: [{ name: 'Butterfly', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png' }, { name: 'Slug', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png' }, { name: 'Lizard', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png' }, { name: 'Snake', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png' }, { name: 'Hawk', image: 'https://cdn2.iconfinder.com/data/icons/oxygen/128x128/apps/staroffice.png' }],
+	      clicks: 0,
+	      cps: 0,
+	      tick: 10,
+	      incomes: [.3, 3, 15, 35, 75],
+	      monsters: [0, 0, 0, 0, 0]
 	    };
 	    return _this;
 	  }
 
 	  _createClass(App, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.ticker = setInterval(this.tick.bind(this), 1000 / this.state.tick);
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      clearInterval(this.ticker);
+	    }
+	  }, {
+	    key: 'tick',
+	    value: function tick() {
+	      this.setState(function (prevState, props) {
+	        return { clicks: prevState.clicks + prevState.cps / prevState.tick };
+	      });
+	    }
+	  }, {
+	    key: 'mainClick',
+	    value: function mainClick() {
+	      this.setState(function (prevState, props) {
+	        {
+	          clicks: prevState.clicks++;
+	        }
+	      });
+	      console.log('click');
+	    }
+	  }, {
+	    key: 'monsterClick',
+	    value: function monsterClick(i, side) {
+	      if (side === 'left side') {
+	        if (this.state.clicks >= this.state.availableIncomes[i].cost) this.setState(function (prevState, props) {
+	          return { cps: prevState.cps + prevState.availableIncomes[i].cps,
+	            clicks: prevState.clicks - prevState.availableIncomes[i].cost };
+	        });
+	        // availableIncomes[i].cost: prevState.availableIncomes[i].cost * prevState.availableIncomes[i].costUp
+	      } else if (side === 'right side') {
+	        console.log('monster click');
+	      }
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'app' },
-	        _react2.default.createElement(_Container2.default, { buttons: this.state.availableIncomes }),
-	        _react2.default.createElement(MainInfo, null),
-	        _react2.default.createElement(_Container2.default, { buttons: this.state.availableMonsters })
+	        _react2.default.createElement(_Container2.default, { title: 'left side', click: this.monsterClick.bind(this), buttons: this.state.availableIncomes }),
+	        _react2.default.createElement(_MainInfo2.default, { clicks: this.state.clicks, mainClick: this.mainClick.bind(this) }),
+	        _react2.default.createElement(_Container2.default, { title: 'right side', click: this.monsterClick.bind(this), buttons: this.state.availableMonsters })
 	      );
 	    }
 	  }]);
@@ -21547,19 +21601,30 @@
 		}
 
 		_createClass(Container, [{
+			key: 'handleClick',
+			value: function handleClick() {
+				console.log('click');
+			}
+		}, {
 			key: 'render',
 			value: function render() {
+				var _this2 = this;
+
 				return _react2.default.createElement(
 					'div',
 					{ className: 'container' },
 					_react2.default.createElement(
 						'div',
 						{ className: 'title' },
-						'THIS SIDE'
+						this.props.title
 					),
-					this.props.buttons.map(function (button) {
-						return _react2.default.createElement(_Button2.default, { details: button });
-					})
+					_react2.default.createElement(
+						'div',
+						{ className: 'btnContainer' },
+						this.props.buttons.map(function (button, index) {
+							return _react2.default.createElement(_Button2.default, { side: _this2.props.title, click: _this2.props.click, i: index, key: index, details: button });
+						})
+					)
 				);
 			}
 		}]);
@@ -21571,6 +21636,186 @@
 
 /***/ },
 /* 173 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Button = function (_React$Component) {
+	  _inherits(Button, _React$Component);
+
+	  function Button(props) {
+	    _classCallCheck(this, Button);
+
+	    return _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this, props));
+	  }
+
+	  _createClass(Button, [{
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'monster', onClick: function onClick() {
+	            return _this2.props.click(_this2.props.i, _this2.props.side);
+	          } },
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'outline' },
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'btnName' },
+	            this.props.details.name
+	          ),
+	          _react2.default.createElement(
+	            'span',
+	            { className: 'btnPrice' },
+	            this.props.details.cost
+	          ),
+	          _react2.default.createElement('image', { src: this.props.details.image }),
+	          _react2.default.createElement('div', { className: 'inner' }),
+	          _react2.default.createElement('div', { className: 'glass' })
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Button;
+	}(_react2.default.Component);
+
+	exports.default = Button;
+
+/***/ },
+/* 174 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _MainButton = __webpack_require__(175);
+
+	var _MainButton2 = _interopRequireDefault(_MainButton);
+
+	var _Info = __webpack_require__(176);
+
+	var _Info2 = _interopRequireDefault(_Info);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MainInfo = function (_React$Component) {
+		_inherits(MainInfo, _React$Component);
+
+		function MainInfo(props) {
+			_classCallCheck(this, MainInfo);
+
+			return _possibleConstructorReturn(this, (MainInfo.__proto__ || Object.getPrototypeOf(MainInfo)).call(this, props));
+		}
+
+		_createClass(MainInfo, [{
+			key: 'render',
+			value: function render() {
+				return _react2.default.createElement(
+					'div',
+					{ className: 'mainInfo' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'infoContainer' },
+						_react2.default.createElement(_MainButton2.default, { mainClick: this.props.mainClick }),
+						_react2.default.createElement(_Info2.default, { clicks: this.props.clicks })
+					)
+				);
+			}
+		}]);
+
+		return MainInfo;
+	}(_react2.default.Component);
+
+	exports.default = MainInfo;
+
+/***/ },
+/* 175 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MainButton = function (_React$Component) {
+		_inherits(MainButton, _React$Component);
+
+		function MainButton(props) {
+			_classCallCheck(this, MainButton);
+
+			return _possibleConstructorReturn(this, (MainButton.__proto__ || Object.getPrototypeOf(MainButton)).call(this, props));
+		}
+
+		_createClass(MainButton, [{
+			key: "render",
+			value: function render() {
+				return _react2.default.createElement(
+					"div",
+					{ onClick: this.props.mainClick, className: "mainButton button large round red" },
+					"Click Me!"
+				);
+			}
+		}]);
+
+		return MainButton;
+	}(_react2.default.Component);
+
+	exports.default = MainButton;
+
+/***/ },
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -21593,35 +21838,43 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Button = function (_React$Component) {
-		_inherits(Button, _React$Component);
+	var Info = function (_React$Component) {
+		_inherits(Info, _React$Component);
 
-		function Button(props) {
-			_classCallCheck(this, Button);
+		function Info(props) {
+			_classCallCheck(this, Info);
 
-			return _possibleConstructorReturn(this, (Button.__proto__ || Object.getPrototypeOf(Button)).call(this, props));
+			return _possibleConstructorReturn(this, (Info.__proto__ || Object.getPrototypeOf(Info)).call(this, props));
 		}
 
-		_createClass(Button, [{
+		_createClass(Info, [{
 			key: 'render',
 			value: function render() {
 				return _react2.default.createElement(
 					'div',
-					{ className: 'monster' },
+					{ className: 'info' },
 					_react2.default.createElement(
 						'div',
-						{ className: 'outline' },
-						_react2.default.createElement('image', { src: this.props.details.image, className: 'inner' }),
-						_react2.default.createElement('div', { className: 'glass' })
+						null,
+						_react2.default.createElement(
+							'span',
+							null,
+							'Mutagen'
+						),
+						_react2.default.createElement(
+							'span',
+							null,
+							Math.round(this.props.clicks)
+						)
 					)
 				);
 			}
 		}]);
 
-		return Button;
+		return Info;
 	}(_react2.default.Component);
 
-	exports.default = Button;
+	exports.default = Info;
 
 /***/ }
 /******/ ]);

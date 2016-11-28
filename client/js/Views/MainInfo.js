@@ -6,11 +6,14 @@ export default class MainInfo extends React.Component {
 	constructor(props) {
 		super(props)
 	}
+
 	render() {
 		return (
-		<div className='main-info'>
-			<MainButton/>
-			<Info/>
+		<div className='mainInfo'>
+			<div className='infoContainer'>
+				<MainButton mainClick={this.props.mainClick} />
+				<Info clicks={this.props.clicks} />
+			</div>
 		</div>
 			)
 	}

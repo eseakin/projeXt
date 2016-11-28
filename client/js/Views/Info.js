@@ -7,10 +7,9 @@ export default class Info extends React.Component {
 	render() {
 		return (
 		<div className='info'>
-		<div>
-			<span>Mutagen</span><span>100</span>
-		</div>
-
+			<div>
+				<span>Mutagen</span><span>{Math.round(this.props.clicks)}</span>
+			</div>
 		</div>
 			)
 	}
